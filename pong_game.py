@@ -4,53 +4,89 @@ import tkinter as tk
 WIDTH = 600
 HEIGHT = 450
 
-#Player paddles
-def make_paddle1():
-    h = 
-    w = 
+#Create Paddle
+def make_player_paddle():
+    h = 15
+    w = 110
 
     img = tk.PhotoImage(width = w, height = h)
 
     for y in range(h):
         for x in range(w):
-            if 6 <= x <= 17 and y >= 6:
+            if 10 <= x <= 100 and y >= 5:
                 img.put("white", (x, y))
     return img
 
-def make_paddle2():
-    h = 
-    w = 
-
+#Create Ball
+def make_ball():
+    pattern = [
+        "00001110000",
+        "00011111000",
+        "00111111100",
+        "01111111110",
+        "01111111110",
+        "01111111110",
+        "00111111100",
+        "00011111000",
+        "00001110000",
+    ]
+    h = len(pattern)
+    w = len(pattern[0])
     img = tk.PhotoImage(width = w, height = h)
-
     for y in range(h):
         for x in range(w):
-            if 
-#Ball
+            if pattern [y] [x] == "1":
+                img.put("white", (x, y))
+    return img
 
 root = tk.Tk()
-root.title("Title")
+root.title("")
 
 canvas = tk.Canvas(root, width = WIDTH, height = HEIGHT, bg = "black")
 canvas.pack()
 
-player_img = 
-enemy_img = 
+player_img = make_player_paddle()
+ball_img = make_ball()
 
-#Ball goes past paddle
+#Create Player 
+def start():
+    global player
+    player = canvas.create_image(WIDTH//2, HEIGHT - 40, image = player_img, anchor = "center")
+    ball = canvas.create_image(WIDTH//2, HEIGHT//2, image = ball_img, anchor = "center")
 
-#Score counter
 
-#Ball movement
+#Player Controls
+def move_left(event):
+    canvas.move(player, -15, 0)
+def move_right(event):
+    canvas.move(player, 15, 0)
 
-#Paddle movement
+#Binding
+root.bind("<Left>", move_left)
+root.bind("<Right>", move_right)
 
-#Ball and paddle collision
 
-#Game 
+#Starting Angle
 
-#Restart
+#Collision with Left Wall
 
-#Game Over
+#Collision with Right Wall
 
-#Win
+#Collision with Paddle
+
+#Collision with Top Wall
+
+#Start Game and Reset
+def reset(event = None):
+    global alive, enemy_dx
+    canvas.delete("all")
+
+    alive = True
+    enemy_dx = 4
+
+    start()
+
+root.bind("r", reset)
+
+reset()
+root.mainloop()
