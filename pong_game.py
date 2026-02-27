@@ -40,7 +40,7 @@ def make_ball():
     return img
 
 root = tk.Tk()
-root.title("")
+root.title("BRICK BLAST")
 
 canvas = tk.Canvas(root, width = WIDTH, height = HEIGHT, bg = "black")
 canvas.pack()
@@ -52,7 +52,7 @@ ball_img = make_ball()
 def start():
     global player
     player = canvas.create_image(WIDTH//2, HEIGHT - 40, image = player_img, anchor = "center")
-    ball = canvas.create_image(WIDTH//2, HEIGHT//2, image = ball_img, anchor = "center")
+    #ball = canvas.create_image(WIDTH//2, HEIGHT//2, image = ball_img, anchor = "center")
 
 
 #Player Controls
@@ -68,22 +68,68 @@ root.bind("<Right>", move_right)
 
 #Starting Angle
 
-#Collision with Left Wall
+balls = []
 
-#Collision with Right Wall
+def create_ball():
+    balls.clear()
+    b = canvas.create_image(WIDTH//2, HEIGHT//2, image = ball_img, anchor = "center")
 
-#Collision with Paddle
+    balls.append(b)
 
-#Collision with Top Wall
+ball_dx = 5
+ball_dy = 5
+
+def move_ball():
+    global ball_dx, ball_dy
+    hit_right_wall = False
+    hit_left_wall = False
+    hit_top = False
+    hit_bottom = False
+
+    for b in balls:
+        x1, y1, x2, y2 = canvas.bbox(b)
+
+        if x2 >= WIDTH - 10 and ball_dx > 0:
+            hit_right_wall = True
+        if x1 <= 10 and ball_dx < 0:
+            hit_left_wall = True
+        if y1 <= 10 and ball_dy <  0:
+            hit_top = True
+        if y2 >= HEIGHT - 10 and ball_dy > 0:
+            hit_bottom = True
+        
+    if hit_right_wall or hit_left_wall:
+        ball_dx = -ball_dx
+    if hit_top or hit_bottom:
+        ball_dy = -ball_dy
+    for b in balls:
+        canvas.move(b, ball_dx, ball_dy)
+    
+#Game Loop
+alive = True
+
+def game_loop():
+    global alive
+    
+    if not alive:
+        canvas.delete("all")
+        canvas.create_text(WIDTH//2, HEIGHT//2, text = "GAME OVER", fill = "red", font = ("Arial", 24))
+        return
+    move_ball()
+
+    root.after(40, game_loop)
+
 
 #Start Game and Reset
 def reset(event = None):
-    global alive, enemy_dx
+    global alive, ball_dx, ball_dy
     canvas.delete("all")
 
     alive = True
-    enemy_dx = 4
+    ball_dx = 5
+    ball_dy = 5
 
+    create_ball()
     start()
 
 root.bind("r", reset)
