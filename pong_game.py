@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 #PARAMETERS
 WIDTH = 600
@@ -39,6 +40,10 @@ def make_ball():
                 img.put("white", (x, y))
     return img
 
+#Create Bricks
+#def make_brick_sprite():
+
+
 root = tk.Tk()
 root.title("BRICK BLAST")
 
@@ -71,37 +76,40 @@ root.bind("<Right>", move_right)
 balls = []
 
 def create_ball():
-    balls.clear()
+    #balls.clear()
     b = canvas.create_image(WIDTH//2, HEIGHT//2, image = ball_img, anchor = "center")
 
     balls.append(b)
 
-ball_dx = 5
-ball_dy = 5
+ball_dx = random.randint(4, 7)
+ball_dy = random.randint(4, 7)
 
 def move_ball():
-    global ball_dx, ball_dy
+    global ball_dx, ball_dy, balls
     hit_right_wall = False
     hit_left_wall = False
     hit_top = False
-    hit_bottom = False
+    hit_paddle = False
 
     for b in balls:
-        x1, y1, x2, y2 = canvas.bbox(b)
+        bx1, by1, bx2, by2 = canvas.bbox(b)
+        px1, py1, px2, py2 = canvas.bbox(player)
 
-        if x2 >= WIDTH - 10 and ball_dx > 0:
+        if bx2 >= WIDTH - 10 and ball_dx > 0:
             hit_right_wall = True
-        if x1 <= 10 and ball_dx < 0:
+        if bx1 <= 10 and ball_dx < 0:
             hit_left_wall = True
-        if y1 <= 10 and ball_dy <  0:
+        if by1 <= 10 and ball_dy <  0:
             hit_top = True
-        if y2 >= HEIGHT - 10 and ball_dy > 0:
-            hit_bottom = True
-        
+        if by2 >= py1 and bx1 >= px1 and bx2 <= px2 and ball_dy > 0:
+            hit_paddle = True
+
+    # Reverse directions as needed, then move once per tick
     if hit_right_wall or hit_left_wall:
         ball_dx = -ball_dx
-    if hit_top or hit_bottom:
+    if hit_top or hit_paddle:
         ball_dy = -ball_dy
+
     for b in balls:
         canvas.move(b, ball_dx, ball_dy)
     
@@ -114,24 +122,36 @@ def game_loop():
     if not alive:
         canvas.delete("all")
         canvas.create_text(WIDTH//2, HEIGHT//2, text = "GAME OVER", fill = "red", font = ("Arial", 24))
+        canvas.create_text(WIDTH//2, HEIGHT//2 + 30, text = "Press 'R' to Restart", fill = "white", font = ("Arial", 16))
         return
     move_ball()
+
+    for b in balls[:]:
+        x1, y1, x2, y2 = canvas.bbox(b)
+        if y2 >= HEIGHT:
+            balls.remove(b)
+            alive = False
+            break
 
     root.after(40, game_loop)
 
 
 #Start Game and Reset
+
 def reset(event = None):
     global alive, ball_dx, ball_dy
     canvas.delete("all")
+    balls.clear()
 
     alive = True
-    ball_dx = 5
-    ball_dy = 5
+    ball_dx = random.randint(4, 7)
+    ball_dy = random.randint(4, 7)
 
     create_ball()
+    # start the recurring game loop (game_loop schedules itself with after)
     start()
-
+    game_loop()
+    
 root.bind("r", reset)
 
 reset()
