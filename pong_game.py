@@ -75,7 +75,7 @@ def start():
 
 #Brick Formation
 ROWS = 4
-COLS = 16
+COLS = 18
 CELL = 32
 
 bricks = []
@@ -87,7 +87,7 @@ def create_brick_formation():
     
     for r in range(ROWS):
         for c in range(COLS):
-            x = start_x + 1.1 *c * CELL
+            x = start_x + c * CELL
             y = start_y + r * CELL
 
             e = canvas.create_image(x, y, image = brick_img, anchor = "nw")
@@ -151,13 +151,13 @@ def move_ball():
             hit_left_wall = True
         if by1 <= 10 and ball_dy <  0:
             hit_top = True
-        if by2 >= py1 - 5 and bx1 >= px1 + 5 and bx2 <= px2 - 5 and ball_dy > 0:
+        if by2 >= py1 + 3 and bx1 >= px1 and bx2 <= px2 and by1 <= py1 + 15 and ball_dy > 0:
             hit_paddle = True
 
     # check bricks for this ball
     for e in bricks:
         ex1, ey1, ex2, ey2 = canvas.bbox(e)
-        if ex1 < bx2 and ex2 > bx1 and ey1 < by2 and ey2 > by1 and ball_dy < 0:
+        if ex1 <= bx2 and ex2 >= bx1 and ey1 <= by2 and ey2 >= by1 and ball_dy < 0:
             hit_brick = True
             break
 
@@ -168,6 +168,10 @@ def move_ball():
     if hit_top or hit_paddle or hit_brick:
         ball_dy = -ball_dy
 
+    if hit_brick:
+        canvas.delete(e)
+        if e in bricks:
+            bricks.remove(e)
     for b in balls:
         canvas.move(b, ball_dx, ball_dy)
     
@@ -176,7 +180,7 @@ def collision(e, b):
     ex1, ey1, ex2, ey2 = canvas.bbox(e)
     bx1, by1, bx2, by2 = canvas.bbox(b)
 
-    return ex1 < bx2 and ex2 > bx1 and ey1 < by2 and ey2 > by1
+    return ex1 <= bx2 and ex2 >= bx1 and ey1 <= by2 and ey2 >= by1
 
 #Game Loop
 alive = True
@@ -192,14 +196,14 @@ def game_loop():
     #create_brick_formation()
     move_ball()
 
-    for b in balls[:]:
-        for e in bricks[:]:
-            if collision(b, e):
-                canvas.delete(e)
-                if e in bricks:
-                    bricks.remove(e)
+    #for b in balls[:]:
+     #   for e in bricks[:]:
+      #      if collision(b, e):
+      #         canvas.delete(e)
+       #         if e in bricks:
+        #            bricks.remove(e)
 
-                break
+         #       break
 
     for b in balls[:]:
         x1, y1, x2, y2 = canvas.bbox(b)
