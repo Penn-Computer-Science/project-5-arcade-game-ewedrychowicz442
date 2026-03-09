@@ -5,7 +5,7 @@ import random
 WIDTH = 600
 HEIGHT = 450
 
-#Score
+#Score counter
 score = 0
 
 #Create Paddle
@@ -45,6 +45,7 @@ def make_ball():
 def colors():
     colors = ["green", "orange", "red", "blue", "violet","indigo"]
     return random.choice(colors)
+
 #Create Bricks
 def make_brick():
     h = 15
@@ -58,7 +59,6 @@ def make_brick():
             if 10 <= x <= 40 and y >= 5:
                 img.put(color, (x, y))
     return img
-
 
 root = tk.Tk()
 root.title("BRICK BREAKER")
@@ -166,8 +166,7 @@ def move_ball():
             hit_brick = True
             break
 
-
-    #Reverse directions as needed, then move once per tick
+    # Reverse directions as needed, then move once per tick
     if hit_right_wall or hit_left_wall:
         ball_dx = -ball_dx
     if hit_top or hit_paddle or hit_brick:
@@ -225,7 +224,6 @@ def game_loop():
         canvas.create_text(WIDTH//2, HEIGHT//2 + 30, text = "Press 'R' to Restart", fill = "white", font = ("Arial", 16))
 
     root.after(60, game_loop)
-
 
 #Start Game and Reset
 
