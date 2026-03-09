@@ -1,0 +1,6 @@
+-  Name of your game
+The name of my game is Brick Breaker.
+-  Controls
+The left and right arrow control the direction of the paddle.
+-  Short description of how the game works
+The ball starts in the center of the screen and then falls at a random angle, the player must use the arrow keys to control the paddle. The goal is to get the ball to bounce of the paddle so it will reverse directions and break a brick above. When the ball breaks a brick it bounces off and falls back down, it also bounces of the left and right walls. Every brick broke increases the score by 1. If the player fails to move the paddle under the ball in time and it drops in the area below the paddle the player loses and has the option to restart the game. If all the bricks have been broken then the player wins and can choose to play the game again. 
