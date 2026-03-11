@@ -228,7 +228,7 @@ def game_loop():
 #Start Game and Reset
 
 def reset(event = None):
-    global alive, ball_dx, ball_dy
+    global alive, ball_dx, ball_dy, score
     canvas.delete("all")
     balls.clear()
     bricks.clear()
@@ -238,6 +238,8 @@ def reset(event = None):
     ball_dy = random.randint(4, 7)
 
     create_ball()
+    score = 0
+    score_label.config(text = "Score: " + str(score))
     # start the recurring game loop (game_loop schedules itself with after)
     start()
     create_brick_formation()
