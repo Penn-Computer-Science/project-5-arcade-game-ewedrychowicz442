@@ -162,7 +162,7 @@ def move_ball():
     # check bricks for this ball
     for e in bricks:
         ex1, ey1, ex2, ey2 = canvas.bbox(e)
-        if ex1 <= bx2 and ex2 >= bx1 and ey1 <= by2 and ey2 >= by1 and ball_dy < 0:
+        if ex1 <= bx2 and ex2 >= bx1 and ey1 <= by2 and ey2 >= by1:
             hit_brick = True
             break
 
